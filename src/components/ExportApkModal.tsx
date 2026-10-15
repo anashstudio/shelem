@@ -35,7 +35,7 @@ export const ExportApkModal: React.FC<ExportApkModalProps> = ({
 
   if (!isOpen) return null;
 
-  const targetRepo = repoUrl.trim() || 'https://github.com/YOUR_USERNAME/shelem-app.git';
+  const targetRepo = repoUrl.trim() || 'https://github.com/anashstudio/shelem.git';
 
   const gitCommands = `git init
 git add .
