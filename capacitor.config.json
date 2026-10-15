@@ -1,0 +1,9 @@
+{
+  "appId": "ir.shelem.scorekeeper",
+  "appName": "شلم پرو",
+  "webDir": "dist",
+  "bundledWebRuntime": false,
+  "server": {
+    "androidScheme": "https"
+  }
+}

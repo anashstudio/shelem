@@ -1,0 +1,22 @@
+{
+  "id": "/",
+  "name": "شلم پرو | Shelem Pro",
+  "short_name": "شلم پرو",
+  "description": "اپلیکیشن پیشرفته و هوشمند ثبت و محاسبه امتیازات بازی شلم با امکان شخصی‌سازی تم و خروجی APK",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#064e3b",
+  "theme_color": "#064e3b",
+  "dir": "rtl",
+  "lang": "fa",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
