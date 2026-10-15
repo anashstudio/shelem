@@ -20,10 +20,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
 
       - name: Install Node Dependencies
-        run: npm ci || npm install
+        run: npm install
 
       - name: Build Web Application
         run: npm run build
@@ -31,24 +30,23 @@ jobs:
       - name: Set up Java JDK
         uses: actions/setup-java@v4
         with:
-          distribution: 'zulu'
-          java-version: '17'
+          distribution: 'temurin'
+          java-version: '21'
 
       - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
-
-      - name: Install Capacitor CLI & Core
         run: |
-          npm install @capacitor/core @capacitor/cli @capacitor/android
-          npx cap add android || true
-          npx cap copy android
-          npx cap update android
+          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
+          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platforms;android-35" "build-tools;35.0.0" || true
+
+      - name: Sync Capacitor Android
+        run: |
+          npx cap sync android
 
       - name: Build Debug APK with Gradle
         run: |
           cd android
           chmod +x ./gradlew
-          ./gradlew assembleDebug --stacktrace
+          ./gradlew assembleDebug --no-daemon --stacktrace
 
       - name: Upload Debug APK Artifact
         uses: actions/upload-artifact@v4
