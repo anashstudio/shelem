@@ -6,11 +6,14 @@ interface AboutUsModalProps {
   isOpen: boolean;
   onClose: () => void;
   settings: GameSettings;
+  onReplayIntro?: () => void;
 }
 
 export const AboutUsModal: React.FC<AboutUsModalProps> = ({
   isOpen,
   onClose,
+  settings,
+  onReplayIntro,
 }) => {
   const [copiedLink, setCopiedLink] = useState(false);
 
@@ -30,8 +33,8 @@ export const AboutUsModal: React.FC<AboutUsModalProps> = ({
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-[var(--color-border)] bg-[var(--color-canvas)]/60">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-[var(--color-accent)]/15 border border-[var(--color-accent)]/30 flex items-center justify-center text-[var(--color-accent)] shadow-sm">
-              <Info className="w-5 h-5" />
+            <div className="w-11 h-11 rounded-xl overflow-hidden border border-amber-400/30 p-1 bg-gradient-to-br from-[#064e3b] to-[#022c22] shadow-sm flex items-center justify-center">
+              <img src="/icon.svg" alt="شلم پرو" className="w-full h-full object-contain" />
             </div>
             <div>
               <h3 className="text-base sm:text-lg font-bold text-[var(--color-text-main)]">
@@ -135,19 +138,15 @@ export const AboutUsModal: React.FC<AboutUsModalProps> = ({
             <ul className="space-y-2 text-xs text-[var(--color-text-muted)] list-none pr-1">
               <li className="flex items-start gap-2">
                 <span className="text-[var(--color-accent)] font-bold">✓</span>
-                <span>محاسبه خودکار و دقیق بر اساس آخرین قوانین رسمی بازی شلم (حاکم خالی کرد، به تعهد خود نرسید و امتیازات دست)</span>
+                <span>محاسبه خودکار و دقیق بر اساس آخرین قوانین رسمی بازی شلم (شلم مثبت، شلم منفی ۵۰۰- و دریافت امتیازات دست حریف)</span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-[var(--color-accent)] font-bold">✓</span>
-                <span>قانون شلم کامل: ۵۰۰ امتیاز مثبت در صورت موفقیت شلم، و ۵۰۰ امتیاز منفی در صورت خواندن شلم و گرفتن حداقل ۵ امتیاز توسط تیم حریف</span>
+                <span>قانون نصف تعهد: حاکم باید حداقل نصف تعهد را کسب کند؛ در غیر این صورت شلم منفی می‌خورد و حریف امتیاز کسب‌شده خود را می‌گیرد</span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-[var(--color-accent)] font-bold">✓</span>
-                <span>انتخاب گام‌های ۵ تایی جهت سرعت و دقت حداکثری در ثبت دست‌ها</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-[var(--color-accent)] font-bold">✓</span>
-                <span>پوسته‌های متنوع و چشم‌نواز (کازینو، تاریک لوکس، پاسور کلاسیک و ...) با تایپوگرافی اصیل فارسی</span>
+                <span>لوگوی اختصاصی و تمام رنگی شلم با صفحه ورود انیمیشنی (موشن اینترو)</span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-[var(--color-accent)] font-bold">✓</span>
@@ -163,17 +162,30 @@ export const AboutUsModal: React.FC<AboutUsModalProps> = ({
               <span>ساخته شده با عشق برای علاقه‌مندان به شلم</span>
             </span>
             <span className="font-mono bg-[var(--color-canvas)] px-2 py-0.5 rounded border border-[var(--color-border)]">
-              نسخه ۱.۱.۰
+              نسخه ۲.۲.۰
             </span>
           </div>
         </div>
 
         {/* Footer */}
-        <div className="p-4 border-t border-[var(--color-border)] bg-[var(--color-canvas)]/60 flex justify-end">
+        <div className="p-4 border-t border-[var(--color-border)] bg-[var(--color-canvas)]/60 flex items-center justify-between">
+          {onReplayIntro && (
+            <button
+              type="button"
+              onClick={() => {
+                onClose();
+                onReplayIntro();
+              }}
+              className="flex items-center gap-1.5 py-2 px-3 rounded-xl border border-[var(--color-border)] hover:bg-[var(--color-surface-hover)] text-xs text-[var(--color-text-muted)] hover:text-[var(--color-text-main)] transition-all"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+              <span>مشاهده موشن لوگو (اینترو)</span>
+            </button>
+          )}
           <button
             type="button"
             onClick={onClose}
-            className="py-2.5 px-6 rounded-xl bg-[var(--color-accent)] hover:bg-[var(--color-accent-hover)] text-neutral-950 text-xs font-bold transition-all shadow-md active:scale-95"
+            className="py-2.5 px-6 rounded-xl bg-[var(--color-accent)] hover:bg-[var(--color-accent-hover)] text-neutral-950 text-xs font-bold transition-all shadow-md active:scale-95 ml-auto"
           >
             بستن
           </button>

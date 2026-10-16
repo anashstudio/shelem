@@ -8,6 +8,7 @@ interface HeaderProps {
   onOpenSettings: () => void;
   onOpenAboutUs: () => void;
   onNewGamePrompt: () => void;
+  onReplayIntro?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -15,6 +16,7 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenSettings,
   onOpenAboutUs,
   onNewGamePrompt,
+  onReplayIntro,
 }) => {
   const [isFullscreen, setIsFullscreen] = React.useState(false);
 
@@ -35,9 +37,18 @@ export const Header: React.FC<HeaderProps> = ({
       <div className="max-w-5xl mx-auto flex items-center justify-between gap-4">
         {/* Brand Zone */}
         <div className="flex items-center gap-3">
-          <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-br from-[var(--color-surface-hover)] to-[var(--color-canvas)] border border-[var(--color-border)] flex items-center justify-center text-xl sm:text-2xl font-black text-[var(--color-accent)] shadow-md select-none">
-            ♠♥
-          </div>
+          <button
+            type="button"
+            onClick={onReplayIntro}
+            title="مشاهده موشن لوگو و انیمیشن ورودی (شلم پرو)"
+            className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl overflow-hidden border border-amber-400/40 shadow-md transition-all hover:scale-105 active:scale-95 bg-gradient-to-br from-[#064e3b] to-[#022c22] p-1 flex items-center justify-center cursor-pointer group"
+          >
+            <img
+              src="/icon.svg"
+              alt="شلم پرو"
+              className="w-full h-full object-contain group-hover:rotate-6 transition-transform"
+            />
+          </button>
           <div>
             <div className="flex items-center gap-2.5">
               <h1 className="text-xl sm:text-2xl font-black text-[var(--color-text-main)] tracking-tight">

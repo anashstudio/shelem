@@ -121,10 +121,12 @@ export function calculateRoundDeltas(
         ? { teamAScoreDelta: shelemValue, teamBScoreDelta: 0, isSuccess: true, isUnderHalfBid: false }
         : { teamAScoreDelta: 0, teamBScoreDelta: shelemValue, isSuccess: true, isUnderHalfBid: false };
     } else {
-      // Hakem did NOT take all 185: Negative Shelem! (-500) and Opponent gets +500
+      // Hakem did NOT take all 185: Negative Shelem for Hakem (-500)
+      // Opponent only gets the points they actually earned in the round (not +500)
+      const opponentEarned = opponentPoints * multiplier;
       return biddingTeam === 'teamA'
-        ? { teamAScoreDelta: -shelemValue, teamBScoreDelta: shelemValue, isSuccess: false, isUnderHalfBid: true }
-        : { teamAScoreDelta: shelemValue, teamBScoreDelta: -shelemValue, isSuccess: false, isUnderHalfBid: true };
+        ? { teamAScoreDelta: -shelemValue, teamBScoreDelta: opponentEarned, isSuccess: false, isUnderHalfBid: true }
+        : { teamAScoreDelta: opponentEarned, teamBScoreDelta: -shelemValue, isSuccess: false, isUnderHalfBid: true };
     }
   }
 
@@ -153,10 +155,12 @@ export function calculateRoundDeltas(
   const isUnderHalf = settings.requireHalfBidForHakem !== false && hakemPoints < halfBid;
 
   if (isUnderHalf) {
-    // Negative Shelem for Hakem (-shelemValue), and Opponent gets equal positive score (+shelemValue)
+    // Negative Shelem for Hakem (-shelemValue, e.g. -500)
+    // Opponent only gets the points they actually earned in the round (e.g. 120+), NOT +500
+    const opponentEarned = opponentPoints * multiplier;
     return biddingTeam === 'teamA'
-      ? { teamAScoreDelta: -shelemValue, teamBScoreDelta: shelemValue, isSuccess: false, isUnderHalfBid: true }
-      : { teamAScoreDelta: shelemValue, teamBScoreDelta: -shelemValue, isSuccess: false, isUnderHalfBid: true };
+      ? { teamAScoreDelta: -shelemValue, teamBScoreDelta: opponentEarned, isSuccess: false, isUnderHalfBid: true }
+      : { teamAScoreDelta: opponentEarned, teamBScoreDelta: -shelemValue, isSuccess: false, isUnderHalfBid: true };
   }
 
   // Hakem won at least half of bid (>= halfBid), but did not reach the bid:

@@ -12,6 +12,7 @@ import { SettingsModal } from './components/SettingsModal';
 import { AboutUsModal } from './components/AboutUsModal';
 import { NewGameModal } from './components/NewGameModal';
 import { WinnerCelebrationModal } from './components/WinnerCelebrationModal';
+import { IntroMotion } from './components/IntroMotion';
 import { GameSettings, GameState, Round, TeamId } from './types/shelem';
 import {
   DEFAULT_SETTINGS,
@@ -25,6 +26,9 @@ import {
 export default function App() {
   const [settings, setSettings] = useState<GameSettings>(() => loadSettings());
   const [game, setGame] = useState<GameState | null>(() => loadGame());
+
+  // Intro Motion Screen state
+  const [showIntro, setShowIntro] = useState<boolean>(true);
 
   // Modals state
   const [isAddRoundOpen, setIsAddRoundOpen] = useState(false);
@@ -206,6 +210,7 @@ export default function App() {
         onOpenSettings={() => setIsSettingsOpen(true)}
         onOpenAboutUs={() => setIsAboutUsOpen(true)}
         onNewGamePrompt={() => setIsNewGameOpen(true)}
+        onReplayIntro={() => setShowIntro(true)}
       />
 
       {/* Main Content Area */}
@@ -232,8 +237,8 @@ export default function App() {
           </>
         ) : (
           <div className="flex flex-col items-center justify-center p-12 text-center space-y-4">
-            <div className="w-16 h-16 rounded-2xl bg-[var(--color-surface)] border border-[var(--color-border)] flex items-center justify-center text-3xl">
-              ♠♥
+            <div className="w-20 h-20 rounded-2xl overflow-hidden border border-amber-400/40 shadow-xl bg-gradient-to-br from-[#064e3b] to-[#022c22] p-2 flex items-center justify-center">
+              <img src="/icon.svg" alt="شلم پرو" className="w-full h-full object-contain" />
             </div>
             <h2 className="text-xl font-bold">به شلم پرو خوش آمدید</h2>
             <p className="text-sm text-[var(--color-text-muted)] max-w-md">
@@ -287,6 +292,7 @@ export default function App() {
         isOpen={isAboutUsOpen}
         onClose={() => setIsAboutUsOpen(false)}
         settings={settings}
+        onReplayIntro={() => setShowIntro(true)}
       />
 
       <NewGameModal
@@ -311,6 +317,9 @@ export default function App() {
           onContinuePlaying={handleContinuePlaying}
         />
       )}
+
+      {/* Motion Intro Splash Screen on App Launch */}
+      {showIntro && <IntroMotion onComplete={() => setShowIntro(false)} />}
     </div>
   );
 }
