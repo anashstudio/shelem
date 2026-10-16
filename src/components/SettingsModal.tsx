@@ -34,6 +34,8 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   const [shelemBonus, setShelemBonus] = useState(settings.shelemBonus);
   const [penaltyType, setPenaltyType] = useState(settings.penaltyType);
   const [allowDouble, setAllowDouble] = useState(settings.allowDouble);
+  const [requireHalfBidForHakem, setRequireHalfBidForHakem] = useState(settings.requireHalfBidForHakem ?? true);
+  const [opponentScoreOnFail, setOpponentScoreOnFail] = useState<'earnedPoints' | 'bidAmount'>(settings.opponentScoreOnFail ?? 'earnedPoints');
 
   // Team names state
   const [teamAName, setTeamAName] = useState(game.teamAName);
@@ -102,6 +104,8 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
       shelemBonus,
       penaltyType,
       allowDouble,
+      requireHalfBidForHakem,
+      opponentScoreOnFail,
     });
     if (teamAName.trim() && teamBName.trim()) {
       onUpdateTeamNames(teamAName.trim(), teamBName.trim());
@@ -363,6 +367,66 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 </div>
               </div>
 
+              {/* Half-Bid Rule Switch (شلم منفی در صورت نگرفتن نصف تعهد) */}
+              <div className="p-3 rounded-xl bg-[var(--color-canvas)]/40 border border-[var(--color-border)] space-y-2">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <span className="text-xs font-bold text-[var(--color-text-main)]">
+                      قانون الزام کسب حداقل نصف تعهد (شلم منفی)
+                    </span>
+                    <p className="text-[11px] text-[var(--color-text-muted)] mt-0.5">
+                      حاکم باید حداقل نصف تعهد خود را بگیرد؛ وگرنه شلم منفی می‌خورد و حریف نیز به همان میزان مثبت می‌گیرد.
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setRequireHalfBidForHakem(!requireHalfBidForHakem)}
+                    className={`w-12 h-6 rounded-full transition-colors relative flex-shrink-0 cursor-pointer ${
+                      requireHalfBidForHakem ? 'bg-[var(--color-accent)]' : 'bg-[var(--color-border)]'
+                    }`}
+                  >
+                    <div
+                      className={`w-4 h-4 rounded-full bg-white transition-transform absolute top-1 ${
+                        requireHalfBidForHakem ? 'left-1' : 'right-1'
+                      }`}
+                    />
+                  </button>
+                </div>
+              </div>
+
+              {/* Opponent Score on Normal Fail */}
+              <div className="space-y-2">
+                <label className="block text-xs font-bold text-[var(--color-text-muted)]">
+                  امتیاز تیم حریف هنگام خالی کردن حاکم (در صورت کسب حداقل نصف تعهد):
+                </label>
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setOpponentScoreOnFail('earnedPoints')}
+                    className={`p-2.5 rounded-xl border text-right text-xs transition-all cursor-pointer ${
+                      opponentScoreOnFail === 'earnedPoints'
+                        ? 'border-[var(--color-accent)] bg-[var(--color-surface-hover)] font-bold text-[var(--color-accent)]'
+                        : 'border-[var(--color-border)] bg-[var(--color-canvas)]/40 text-[var(--color-text-muted)]'
+                    }`}
+                  >
+                    <div>امتیاز کسب‌شده حریف</div>
+                    <div className="text-[10px] opacity-75">استاندارد شلم (امتیاز برگ‌های برده شده)</div>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setOpponentScoreOnFail('bidAmount')}
+                    className={`p-2.5 rounded-xl border text-right text-xs transition-all cursor-pointer ${
+                      opponentScoreOnFail === 'bidAmount'
+                        ? 'border-[var(--color-accent)] bg-[var(--color-surface-hover)] font-bold text-[var(--color-accent)]'
+                        : 'border-[var(--color-border)] bg-[var(--color-canvas)]/40 text-[var(--color-text-muted)]'
+                    }`}
+                  >
+                    <div>کل تعهد حاکم به حریف</div>
+                    <div className="text-[10px] opacity-75">قانون ویژه (معادل میزان تعهد حاکم)</div>
+                  </button>
+                </div>
+              </div>
+
               {/* Allow Double Multiplier Switch */}
               <div className="flex items-center justify-between p-3 rounded-xl bg-[var(--color-canvas)]/30 border border-[var(--color-border)]">
                 <div>
@@ -372,7 +436,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 <button
                   type="button"
                   onClick={() => setAllowDouble(!allowDouble)}
-                  className={`w-12 h-6 rounded-full transition-colors relative ${
+                  className={`w-12 h-6 rounded-full transition-colors relative cursor-pointer ${
                     allowDouble ? 'bg-[var(--color-accent)]' : 'bg-[var(--color-border)]'
                   }`}
                 >

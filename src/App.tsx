@@ -209,7 +209,7 @@ export default function App() {
       />
 
       {/* Main Content Area */}
-      <main className="flex-1 w-full max-w-5xl mx-auto p-3 sm:p-5 space-y-6">
+      <main className="flex-1 w-full max-w-5xl mx-auto px-4 sm:px-6 pt-5 sm:pt-8 pb-14 space-y-6 sm:space-y-8">
         {game ? (
           <>
             <ScoreBoard
@@ -248,27 +248,6 @@ export default function App() {
           </div>
         )}
       </main>
-
-      {/* Footer */}
-      <footer className="border-t border-[var(--color-border)]/50 py-4 px-4 text-center text-xs text-[var(--color-text-muted)] bg-[var(--color-surface)]/40 transition-colors">
-        <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
-          <span>شلم پرو | نرم‌افزار هوشمند ثبت امتیازات بازی شلم</span>
-          <div className="flex items-center gap-4">
-            <button
-              onClick={() => setIsAboutUsOpen(true)}
-              className="hover:text-[var(--color-accent)] transition-colors underline underline-offset-4"
-            >
-              درباره ما و سازنده نرم‌افزار
-            </button>
-            <button
-              onClick={() => setIsSettingsOpen(true)}
-              className="hover:text-[var(--color-accent)] transition-colors underline underline-offset-4"
-            >
-              شخصی‌سازی ظاهر و تم
-            </button>
-          </div>
-        </div>
-      </footer>
 
       {/* Modals */}
       {game && (

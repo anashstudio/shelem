@@ -11,6 +11,7 @@ export interface Round {
   isBidShelem?: boolean; // Did bidding team BID Shelem (500)?
   isReverseShelem: boolean; // Did defending team make Shelem (Nouse)?
   isDouble: boolean; // Double multiplier
+  isUnderHalfBid?: boolean; // Did Hakem get less than half of their bid?
   teamAScoreDelta: number; // calculated delta
   teamBScoreDelta: number; // calculated delta
   teamATotalAfter: number;
@@ -25,6 +26,8 @@ export interface GameSettings {
   reverseShelemBonus: number; // e.g. 500
   penaltyType: 'bidAmount' | 'doubleBid'; // normal negative or double penalty
   allowDouble: boolean; // show double option in round entry
+  requireHalfBidForHakem: boolean; // Hakem must get at least half of bid or negative Shelem
+  opponentScoreOnFail: 'earnedPoints' | 'bidAmount'; // What opponent gets on normal fail
   theme: 'emerald' | 'onyx' | 'crimson' | 'navy' | 'paper' | 'amethyst';
   fontFamily: 'vazir' | 'shabnam' | 'sahel' | 'estedad' | 'system';
   fontSize: 'normal' | 'large' | 'xlarge';

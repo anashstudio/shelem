@@ -31,19 +31,19 @@ export const Header: React.FC<HeaderProps> = ({
   };
 
   return (
-    <header className="sticky top-0 z-30 border-b border-[var(--color-border)] bg-[var(--color-surface)]/95 backdrop-blur-md px-4 py-3 transition-colors duration-200">
-      <div className="max-w-4xl mx-auto flex items-center justify-between gap-4">
+    <header className="sticky top-0 z-30 border-b border-[var(--color-border)] bg-[var(--color-surface)]/95 backdrop-blur-md px-4 sm:px-6 py-3.5 sm:py-4 transition-colors duration-200 shadow-sm">
+      <div className="max-w-5xl mx-auto flex items-center justify-between gap-4">
         {/* Brand Zone */}
-        <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-[var(--color-canvas)] border border-[var(--color-border)] flex items-center justify-center text-sm font-bold text-[var(--color-accent)] shadow-sm">
+        <div className="flex items-center gap-3">
+          <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-br from-[var(--color-surface-hover)] to-[var(--color-canvas)] border border-[var(--color-border)] flex items-center justify-center text-xl sm:text-2xl font-black text-[var(--color-accent)] shadow-md select-none">
             ♠♥
           </div>
           <div>
-            <div className="flex items-center gap-2">
-              <h1 className="text-base font-bold text-[var(--color-text-main)] tracking-tight">
+            <div className="flex items-center gap-2.5">
+              <h1 className="text-xl sm:text-2xl font-black text-[var(--color-text-main)] tracking-tight">
                 شلم پرو
               </h1>
-              <span className="text-[11px] text-[var(--color-text-muted)] font-medium">
+              <span className="text-xs sm:text-sm text-[var(--color-accent)] font-bold bg-[var(--color-accent)]/10 px-2 py-0.5 rounded-lg border border-[var(--color-accent)]/20 font-tabular">
                 سقف {toPersianDigits(settings.targetScore, settings.persianDigits)}
               </span>
             </div>

@@ -6,6 +6,8 @@ export const DEFAULT_SETTINGS: GameSettings = {
   reverseShelemBonus: 500,
   penaltyType: 'bidAmount',
   allowDouble: false,
+  requireHalfBidForHakem: true,
+  opponentScoreOnFail: 'earnedPoints',
   theme: 'emerald',
   fontFamily: 'vazir',
   fontSize: 'normal',
@@ -77,7 +79,12 @@ export function calculateRoundDeltas(
   isDouble: boolean,
   settings: GameSettings,
   isBidShelem?: boolean
-): { teamAScoreDelta: number; teamBScoreDelta: number; isSuccess: boolean } {
+): {
+  teamAScoreDelta: number;
+  teamBScoreDelta: number;
+  isSuccess: boolean;
+  isUnderHalfBid: boolean;
+} {
   const teamBPoints = Math.max(0, 185 - teamAPoints);
   const multiplier = isDouble ? 2 : 1;
   const shelemValue = settings.shelemBonus * multiplier;
@@ -94,12 +101,14 @@ export function calculateRoundDeltas(
         teamAScoreDelta: -penalty,
         teamBScoreDelta: shelemValue,
         isSuccess: false,
+        isUnderHalfBid: true,
       };
     } else {
       return {
         teamAScoreDelta: shelemValue,
         teamBScoreDelta: -penalty,
         isSuccess: false,
+        isUnderHalfBid: true,
       };
     }
   }
@@ -109,58 +118,58 @@ export function calculateRoundDeltas(
     // If Hakem won all 185 cards (opponent = 0): Made Shelem! (+500)
     if (hakemPoints === 185 || isShelem) {
       return biddingTeam === 'teamA'
-        ? { teamAScoreDelta: shelemValue, teamBScoreDelta: 0, isSuccess: true }
-        : { teamAScoreDelta: 0, teamBScoreDelta: shelemValue, isSuccess: true };
+        ? { teamAScoreDelta: shelemValue, teamBScoreDelta: 0, isSuccess: true, isUnderHalfBid: false }
+        : { teamAScoreDelta: 0, teamBScoreDelta: shelemValue, isSuccess: true, isUnderHalfBid: false };
     } else {
-      // Hakem did NOT take all 185 (opponent took >= 5): Negative Shelem! (-500)
+      // Hakem did NOT take all 185: Negative Shelem! (-500) and Opponent gets +500
       return biddingTeam === 'teamA'
-        ? { teamAScoreDelta: -shelemValue, teamBScoreDelta: opponentPoints * multiplier, isSuccess: false }
-        : { teamAScoreDelta: opponentPoints * multiplier, teamBScoreDelta: -shelemValue, isSuccess: false };
+        ? { teamAScoreDelta: -shelemValue, teamBScoreDelta: shelemValue, isSuccess: false, isUnderHalfBid: true }
+        : { teamAScoreDelta: shelemValue, teamBScoreDelta: -shelemValue, isSuccess: false, isUnderHalfBid: true };
     }
   }
 
   // Case 3: Team did not bid Shelem, but won all 185 cards during the hand (unannounced Shelem)
   if (isShelem || hakemPoints === 185) {
     return biddingTeam === 'teamA'
-      ? { teamAScoreDelta: shelemValue, teamBScoreDelta: 0, isSuccess: true }
-      : { teamAScoreDelta: 0, teamBScoreDelta: shelemValue, isSuccess: true };
+      ? { teamAScoreDelta: shelemValue, teamBScoreDelta: 0, isSuccess: true, isUnderHalfBid: false }
+      : { teamAScoreDelta: 0, teamBScoreDelta: shelemValue, isSuccess: true, isUnderHalfBid: false };
   }
 
   // Case 4: Normal trick play
-  if (biddingTeam === 'teamA') {
-    const isSuccess = teamAPoints >= bidAmount;
-    if (isSuccess) {
-      return {
-        teamAScoreDelta: teamAPoints * multiplier,
-        teamBScoreDelta: teamBPoints * multiplier,
-        isSuccess: true,
-      };
-    } else {
-      const penalty = (settings.penaltyType === 'doubleBid' ? bidAmount * 2 : bidAmount) * multiplier;
-      return {
-        teamAScoreDelta: -penalty,
-        teamBScoreDelta: teamBPoints * multiplier,
-        isSuccess: false,
-      };
-    }
-  } else {
-    // Team B is bidding team
-    const isSuccess = teamBPoints >= bidAmount;
-    if (isSuccess) {
-      return {
-        teamAScoreDelta: teamAPoints * multiplier,
-        teamBScoreDelta: teamBPoints * multiplier,
-        isSuccess: true,
-      };
-    } else {
-      const penalty = (settings.penaltyType === 'doubleBid' ? bidAmount * 2 : bidAmount) * multiplier;
-      return {
-        teamAScoreDelta: teamAPoints * multiplier,
-        teamBScoreDelta: -penalty,
-        isSuccess: false,
-      };
-    }
+  const isSuccess = hakemPoints >= bidAmount;
+
+  if (isSuccess) {
+    // Hakem made their bid
+    const hakemDelta = hakemPoints * multiplier;
+    const opponentDelta = opponentPoints * multiplier;
+    return biddingTeam === 'teamA'
+      ? { teamAScoreDelta: hakemDelta, teamBScoreDelta: opponentDelta, isSuccess: true, isUnderHalfBid: false }
+      : { teamAScoreDelta: opponentDelta, teamBScoreDelta: hakemDelta, isSuccess: true, isUnderHalfBid: false };
   }
+
+  // Hakem FAILED to make their bid:
+  // Check the half-bid rule: Hakem must win at least half of their bid; otherwise Negative Shelem!
+  const halfBid = bidAmount / 2;
+  const isUnderHalf = settings.requireHalfBidForHakem !== false && hakemPoints < halfBid;
+
+  if (isUnderHalf) {
+    // Negative Shelem for Hakem (-shelemValue), and Opponent gets equal positive score (+shelemValue)
+    return biddingTeam === 'teamA'
+      ? { teamAScoreDelta: -shelemValue, teamBScoreDelta: shelemValue, isSuccess: false, isUnderHalfBid: true }
+      : { teamAScoreDelta: shelemValue, teamBScoreDelta: -shelemValue, isSuccess: false, isUnderHalfBid: true };
+  }
+
+  // Hakem won at least half of bid (>= halfBid), but did not reach the bid:
+  // Normal failure penalty
+  const penalty = (settings.penaltyType === 'doubleBid' ? bidAmount * 2 : bidAmount) * multiplier;
+  const opponentDelta =
+    settings.opponentScoreOnFail === 'bidAmount'
+      ? bidAmount * multiplier
+      : opponentPoints * multiplier;
+
+  return biddingTeam === 'teamA'
+    ? { teamAScoreDelta: -penalty, teamBScoreDelta: opponentDelta, isSuccess: false, isUnderHalfBid: false }
+    : { teamAScoreDelta: opponentDelta, teamBScoreDelta: -penalty, isSuccess: false, isUnderHalfBid: false };
 }
 
 /**
@@ -188,6 +197,7 @@ export function recalculateAllRounds(rounds: Round[], settings: GameSettings): R
     return {
       ...r,
       roundNumber: index + 1,
+      isUnderHalfBid: deltas.isUnderHalfBid,
       teamAScoreDelta: deltas.teamAScoreDelta,
       teamBScoreDelta: deltas.teamBScoreDelta,
       teamATotalAfter: currentTotalA,

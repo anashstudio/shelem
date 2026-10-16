@@ -102,7 +102,11 @@ export const RoundHistoryTable: React.FC<RoundHistoryTableProps> = ({
                         )}
                         {isFail && !round.isReverseShelem && (
                           <span className="text-[10px] text-rose-400 font-medium">
-                            {round.isBidShelem || round.bidAmount >= 500 ? '(شلم منفی)' : '(خالی کرد)'}
+                            {round.isBidShelem || round.bidAmount >= 500
+                              ? '(شلم منفی)'
+                              : round.isUnderHalfBid
+                              ? '(شلم منفی - زیر نصف)'
+                              : '(خالی کرد)'}
                           </span>
                         )}
                       </div>

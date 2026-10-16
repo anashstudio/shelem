@@ -142,6 +142,7 @@ export const AddRoundModal: React.FC<AddRoundModalProps> = ({
       isBidShelem,
       isReverseShelem,
       isDouble,
+      isUnderHalfBid: preview.isUnderHalfBid,
       teamAScoreDelta: preview.teamAScoreDelta,
       teamBScoreDelta: preview.teamBScoreDelta,
       dealer,
@@ -500,6 +501,8 @@ export const AddRoundModal: React.FC<AddRoundModalProps> = ({
                   <span>
                     {isBidShelem
                       ? `شلم منفی شد! تیم مقابل ${toPersianDigits(defenderPoints, settings.persianDigits)} امتیاز گرفت`
+                      : preview.isUnderHalfBid
+                      ? `شلم منفی! حاکم کمتر از نصف تعهدش را گرفت (${toPersianDigits(hakemPoints, settings.persianDigits)} از ${toPersianDigits(bidAmount, settings.persianDigits)} تعهد)`
                       : `حاکم خالی کرد! (${toPersianDigits(hakemPoints, settings.persianDigits)} امتیاز کمتر از ${toPersianDigits(bidAmount, settings.persianDigits)} تعهد)`}
                   </span>
                 </>
@@ -511,20 +514,24 @@ export const AddRoundModal: React.FC<AddRoundModalProps> = ({
               {isBidShelem ? (
                 preview.isSuccess ? (
                   <span>
-                    تیم حاکم ({hakemName}) شلم خوانده بود و تمام ۱۸۵ امتیاز را گرفت؛ پس <strong className="text-emerald-400 font-bold">۵۰۰+ امتیاز</strong> شلم مثبت می‌گیرد و تیم مقابل ۰ امتیاز می‌گیرد.
+                    تیم حاکم ({hakemName}) شلم خوانده بود و تمام ۱۸۵ امتیاز را گرفت؛ پس <strong className="text-emerald-400 font-bold">+{toPersianDigits(settings.shelemBonus, settings.persianDigits)} امتیاز</strong> شلم مثبت می‌گیرد و تیم مقابل ۰ امتیاز می‌گیرد.
                   </span>
                 ) : (
                   <span>
-                    تیم حاکم ({hakemName}) شلم خوانده بود اما شلم نکرد و تیم مقابل <strong className="text-white font-bold">{toPersianDigits(defenderPoints, settings.persianDigits)} امتیاز</strong> گرفت؛ در نتیجه تیم حاکم <strong className="text-rose-400 font-extrabold">۵۰۰- امتیاز منفی (شلم منفی)</strong> می‌گیرد و تیم مقابل <strong className="text-emerald-400 font-bold">{toPersianDigits(defenderPoints, settings.persianDigits)}+ امتیاز</strong> کسب می‌کند.
+                    تیم حاکم ({hakemName}) شلم خوانده بود اما موفق به کسب تمام دست‌ها نشد؛ در نتیجه تیم حاکم <strong className="text-rose-400 font-extrabold">{toPersianDigits(settings.shelemBonus, settings.persianDigits)}- امتیاز (شلم منفی)</strong> می‌گیرد و تیم مقابل نیز دقیقاً به همان میزان <strong className="text-emerald-400 font-bold">+{toPersianDigits(settings.shelemBonus, settings.persianDigits)} امتیاز</strong> دریافت می‌کند.
                   </span>
                 )
               ) : preview.isSuccess ? (
                 <span>
                   تیم حاکم ({hakemName}) به تعهد خود رسید؛ پس تمام <strong className="text-emerald-400 font-bold">{toPersianDigits(hakemPoints, settings.persianDigits)}</strong> امتیاز خود را می‌گیرد و تیم مقابل ({opponentName}) نیز <strong className="text-emerald-400 font-bold">{toPersianDigits(defenderPoints, settings.persianDigits)}</strong> امتیاز کسب‌شده‌اش را می‌گیرد.
                 </span>
+              ) : preview.isUnderHalfBid ? (
+                <span>
+                  قانون نصف تعهد: تیم حاکم ({hakemName}) باید حداقل نصف تعهدش یعنی <strong className="text-white font-bold">{toPersianDigits(Math.ceil(bidAmount / 2), settings.persianDigits)} امتیاز</strong> را می‌گرفت، اما تنها <strong className="text-rose-300 font-bold">{toPersianDigits(hakemPoints, settings.persianDigits)} امتیاز</strong> گرفت؛ بنابراین تیم حاکم <strong className="text-rose-400 font-extrabold">{toPersianDigits(settings.shelemBonus, settings.persianDigits)}- امتیاز (شلم منفی)</strong> می‌خورد و تیم مقابل ({opponentName}) نیز دقیقاً به همان میزان <strong className="text-emerald-400 font-extrabold">+{toPersianDigits(settings.shelemBonus, settings.persianDigits)} امتیاز مثبت</strong> می‌گیرد.
+                </span>
               ) : (
                 <span>
-                  تیم حاکم ({hakemName}) به تعهد خود نرسید (خالی کرد)؛ پس به میزان تعهد خود <strong className="text-rose-400 font-bold">{toPersianDigits(bidAmount, settings.persianDigits)}-</strong> منفی می‌گیرد و تیم مقابل ({opponentName}) تمام <strong className="text-emerald-400 font-bold">{toPersianDigits(defenderPoints, settings.persianDigits)}+</strong> امتیاز کسب‌شده‌اش را می‌گیرد.
+                  تیم حاکم ({hakemName}) حداقل نصف تعهد را گرفت اما به سقف تعهد خود نرسید (خالی کرد)؛ پس به میزان تعهدش <strong className="text-rose-400 font-bold">{toPersianDigits(bidAmount, settings.persianDigits)}-</strong> منفی می‌گیرد و تیم مقابل ({opponentName}) امتیاز کسب‌شده‌اش (<strong className="text-emerald-400 font-bold">+{toPersianDigits(defenderPoints, settings.persianDigits)}</strong>) را می‌گیرد.
                 </span>
               )}
             </div>
