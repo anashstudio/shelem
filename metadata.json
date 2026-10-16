@@ -1,6 +1,6 @@
 {
   "name": "شلم پرو | Shelem Pro",
-  "description": "اپلیکیشن پیشرفته و هوشمند ثبت و محاسبه امتیازات بازی شلم با قابلیت خروجی APK اندروید، شخصی‌سازی تم و قوانین بازی",
+  "description": "اپلیکیشن پیشرفته و هوشمند ثبت و محاسبه امتیازات بازی شلم، شخصی‌سازی تم و قوانین بازی، ساخته محمدرضا امیریوسفی",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

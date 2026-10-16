@@ -1,19 +1,19 @@
 import React from 'react';
-import { Settings, Download, RotateCcw, Maximize2, Minimize2 } from 'lucide-react';
+import { Settings, Info, RotateCcw, Maximize2, Minimize2 } from 'lucide-react';
 import { GameSettings } from '../types/shelem';
 import { toPersianDigits } from '../utils/shelemEngine';
 
 interface HeaderProps {
   settings: GameSettings;
   onOpenSettings: () => void;
-  onOpenExportApk: () => void;
+  onOpenAboutUs: () => void;
   onNewGamePrompt: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
   settings,
   onOpenSettings,
-  onOpenExportApk,
+  onOpenAboutUs,
   onNewGamePrompt,
 }) => {
   const [isFullscreen, setIsFullscreen] = React.useState(false);
@@ -52,14 +52,14 @@ export const Header: React.FC<HeaderProps> = ({
 
         {/* Actions Zone */}
         <div className="flex items-center gap-1.5 sm:gap-2">
-          {/* Export APK / GitHub button */}
+          {/* About Us button */}
           <button
-            onClick={onOpenExportApk}
-            title="دریافت فایل APK و اتصال به گیت‌هاب"
+            onClick={onOpenAboutUs}
+            title="درباره ما و مشخصات سازنده نرم‌افزار"
             className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium text-[var(--color-text-main)] bg-[var(--color-surface-hover)] border border-[var(--color-border)] hover:border-[var(--color-accent)] transition-all min-h-[38px] active:scale-95"
           >
-            <Download className="w-3.5 h-3.5 text-[var(--color-accent)]" />
-            <span className="hidden sm:inline">خروجی APK</span>
+            <Info className="w-3.5 h-3.5 text-[var(--color-accent)]" />
+            <span>درباره ما</span>
           </button>
 
           {/* Fullscreen Toggle */}

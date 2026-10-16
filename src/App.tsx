@@ -9,7 +9,7 @@ import { ScoreBoard } from './components/ScoreBoard';
 import { RoundHistoryTable } from './components/RoundHistoryTable';
 import { AddRoundModal } from './components/AddRoundModal';
 import { SettingsModal } from './components/SettingsModal';
-import { ExportApkModal } from './components/ExportApkModal';
+import { AboutUsModal } from './components/AboutUsModal';
 import { NewGameModal } from './components/NewGameModal';
 import { WinnerCelebrationModal } from './components/WinnerCelebrationModal';
 import { GameSettings, GameState, Round, TeamId } from './types/shelem';
@@ -30,7 +30,7 @@ export default function App() {
   const [isAddRoundOpen, setIsAddRoundOpen] = useState(false);
   const [editingRound, setEditingRound] = useState<Round | null>(null);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const [isExportApkOpen, setIsExportApkOpen] = useState(false);
+  const [isAboutUsOpen, setIsAboutUsOpen] = useState(false);
   const [isNewGameOpen, setIsNewGameOpen] = useState(false);
   const [winnerTeam, setWinnerTeam] = useState<TeamId | null>(null);
 
@@ -204,7 +204,7 @@ export default function App() {
       <Header
         settings={settings}
         onOpenSettings={() => setIsSettingsOpen(true)}
-        onOpenExportApk={() => setIsExportApkOpen(true)}
+        onOpenAboutUs={() => setIsAboutUsOpen(true)}
         onNewGamePrompt={() => setIsNewGameOpen(true)}
       />
 
@@ -255,10 +255,10 @@ export default function App() {
           <span>شلم پرو | نرم‌افزار هوشمند ثبت امتیازات بازی شلم</span>
           <div className="flex items-center gap-4">
             <button
-              onClick={() => setIsExportApkOpen(true)}
+              onClick={() => setIsAboutUsOpen(true)}
               className="hover:text-[var(--color-accent)] transition-colors underline underline-offset-4"
             >
-              دریافت خروجی APK
+              درباره ما و سازنده نرم‌افزار
             </button>
             <button
               onClick={() => setIsSettingsOpen(true)}
@@ -304,9 +304,9 @@ export default function App() {
         />
       )}
 
-      <ExportApkModal
-        isOpen={isExportApkOpen}
-        onClose={() => setIsExportApkOpen(false)}
+      <AboutUsModal
+        isOpen={isAboutUsOpen}
+        onClose={() => setIsAboutUsOpen(false)}
         settings={settings}
       />
 
